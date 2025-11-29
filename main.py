@@ -1,3 +1,6 @@
+import random as rd
+import pandas as pd
+
 teams_list = ['Aurora', 'NaVi', 'Team Liquid', '3DMax', 'Astralis', 'Tyloo', 'Mibr', 'Passion UA'
               , 'M80', 'FlyQuest', 'B8ers', 'Fnatic', 'NiP', 'Paravision', 'Imperial', 'Faze']
 
@@ -25,4 +28,37 @@ odds = [0.55, 0.65, 0.55, 0.65, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7
 
 matchs_odds = dict(zip(matchs, odds))
 
-print(matchs_odds)
+round1 = [('Aurora', 'M80'), ('NaVi', 'FlyQuest'), ('Team Liquid', 'B8ers'), ('3DMax', 'Fnatic')
+        , ('Astralis', 'NiP'), ('Tyloo', 'Paravision'), ('Mibr', 'Imperial'), ('Passion UA', 'Faze')]
+
+
+final = {
+      'Teams': teams_list,
+      '0-3': [0] * len(teams_list),
+      #'1-3': [0] * len(teams_list),
+      #'2-3': [0] * len(teams_list),
+      #'3-2': [0] * len(teams_list),
+      #'3-1': [0] * len(teams_list),
+      '3-0': [0] * len(teams_list),
+}
+
+final_result = pd.DataFrame(final)
+
+num_ite = 10000
+
+for times in range(num_ite):
+      
+        results = dict(zip(teams_list, '0'*len(teams_list)))
+
+        for game in round1:
+
+                rng = rd.random()
+
+                if matchs_odds[game] > rng:
+                        final_result.loc[final_result['Teams'] == game[0], '3-0'] += 1
+                        final_result.loc[final_result['Teams'] == game[1], '0-3'] += 1
+                else:
+                        final_result.loc[final_result['Teams'] == game[1], '3-0'] += 1
+                        final_result.loc[final_result['Teams'] == game[0], '0-3'] += 1
+
+print(final_result)
