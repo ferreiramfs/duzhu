@@ -7,8 +7,10 @@ def run_games(games, results):
         for game in games:
 
                 rng = rd.random()
+                
+                match_odd = 0.5 + (tier_list[teams_list.index(game[0])] - tier_list[teams_list.index(game[1])]) * 0.05
 
-                if matchs_odds[game] > rng:
+                if match_odd > rng:
 
                         results[game[0]] += 1
                 else:
@@ -16,37 +18,13 @@ def run_games(games, results):
         
         return(results)
 
-teams_list = ['Aurora', 'NaVi', 'Team Liquid', '3DMax', 'Astralis', 'Tyloo', 'Mibr', 'Passion UA'
-              , 'M80', 'FlyQuest', 'B8ers', 'Fnatic', 'NiP', 'Paravision', 'Imperial', 'Faze']
+teams_list = ['Furia', 'Vitality', 'Falcons', 'TheMongolz', 'Mouz', 'Team Spirit', 'G2', 'Pain'
+              , 'NaVi', 'Faze', 'B8ers', 'Imperial', 'Parivision', 'Team Liquid', 'Passion UA', '3DMax']
 
-matchs = []
+tier_list = [3, 3, 3, 2, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1]
 
-#Filling the possible matchs
-for i in range(len(teams_list)):
-    for j in range(i + 1, len(teams_list)):
-        matchs.append((teams_list[i], teams_list[j]))
-
-#Filling the expected odds of each possible match
-odds = [0.55, 0.65, 0.55, 0.65, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.65 #Aurora x
-        , 0.6, 0.5, 0.55, 0.65, 0.7, 0.7, 0.65, 0.65, 0.7, 0.7, 0.7, 0.65, 0.7, 0.6    #NaVi
-        , 0.4, 0.5, 0.6, 0.7, 0.7, 0.65, 0.7, 0.7, 0.7, 0.7, 0.65, 0.7, 0.6            #Team Liquid
-        , 0.55, 0.7, 0.7, 0.7, 0.65, 0.7, 0.7, 0.7, 0.7, 0.65, 0.7, 0.65               #3DMax
-        , 0.7, 0.7, 0.7, 0.65, 0.65, 0.65, 0.7, 0.7, 0.6, 0.7, 0.6                     #Astralis
-        , 0.45, 0.5, 0.45, 0.5, 0.5, 0.55, 0.5, 0.4, 0.5, 0.35                         #Tyloo
-        , 0.55, 0.45, 0.55, 0.5, 0.55, 0.55, 0.35, 0.5, 0.35                           #Mibr
-        , 0.45, 0.5, 0.5, 0.5, 0.5, 0.35, 0.5, 0.35                                    #Passion UA
-        , 0.55, 0.55, 0.55, 0.55, 0.45, 0.55, 0.4                                      #M80
-        , 0.5, 0.5, 0.5, 0.4, 0.5, 0.35                                                #FlyQuest
-        , 0.5, 0.5, 0.4, 0.5, 0.35                                                     #B8ers
-        , 0.5, 0.4, 0.5, 0.35                                                          #Fnatic
-        , 0.4, 0.5, 0.35                                                               #NiP
-        , 0.6, 0.55                                                                    #Paravision
-        , 0.35]                                                                        #Imperial    
-
-matchs_odds = dict(zip(matchs, odds))
-
-round1 = [('Aurora', 'M80'), ('NaVi', 'FlyQuest'), ('Team Liquid', 'B8ers'), ('3DMax', 'Fnatic')
-        , ('Astralis', 'NiP'), ('Tyloo', 'Paravision'), ('Mibr', 'Imperial'), ('Passion UA', 'Faze')]
+round1 = [('Furia', 'NaVi'), ('Vitality', 'Faze'), ('Falcons', 'B8ers'), ('TheMongolz', 'Imperial')
+        , ('Mouz', 'Parivision'), ('Team Spirit', 'Team Liquid'), ('G2', 'Passion UA'), ('Pain', '3DMax')]
 
 round2 = []
 
@@ -62,7 +40,7 @@ final = {
 
 final_result = pd.DataFrame(final)
 
-num_ite, iter = 100000, 1
+num_ite, iter = 10000, 1
 
 inicio = time.time()
 
@@ -71,6 +49,7 @@ for times in range(num_ite):
         results = dict(zip(teams_list, [0]*len(teams_list)))
 
         if iter % (num_ite/20) == 0:
+                print(final_result)
                 print(f'{round((iter/num_ite) * 100, 2)}%')
                 print(f'Tempo decorrido: {time.time() - inicio:.4f}s')
                 inicio = time.time()
